@@ -20,6 +20,10 @@ class Team(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+    class Meta:
+        verbose_name = "Klub"
+        verbose_name_plural = "Kluby"
 
 
 class Person(models.Model):
@@ -45,6 +49,8 @@ class Osoba(models.Model):
     nazwisko = models.CharField(max_length=60, blank = False, null = False)
     plec = models.IntegerField(choices=PLCIE.choices, default=PLCIE.choices[2][0])
     stanowisko = models.ForeignKey('Stanowisko', on_delete = models.CASCADE)
+    team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL)
+    country = models.CharField(max_length=3, blank = False, default='', null = False)
     data_dodania = models.DateField(default = date.today, blank=False, null=False)
     
     def __str__(self):
