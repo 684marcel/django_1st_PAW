@@ -10,7 +10,7 @@ class PersonSerializer(serializers.Serializer):
     # pole wymagane
     name = serializers.CharField(required=True)
 
-    pseudonim = serializers.CharField(max_lenght = 100)
+    pseudonim = serializers.CharField(max_length = 100)
 
     # pole mapowane z klasy modelu, z podaniem wartości domyślnych
     # zwróć uwagę na zapisywaną wartość do bazy dla default={wybór}[0] oraz default={wybór}[0][0]
