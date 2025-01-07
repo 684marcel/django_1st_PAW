@@ -4,6 +4,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Person, Team
 from .serializers import PersonSerializer
+from django.http import HttpResponse
+import datetime
+from django.http import Http404, HttpResponse
+
 
 # określamy dostępne metody żądania dla tego endpointu
 @api_view(['GET'])
@@ -50,3 +54,38 @@ def person_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Create your views here.
+
+# kod umieszczamy w pliku views.py wybranej aplikacji
+
+
+
+def welcome_view(request):
+    now = datetime.datetime.now()
+    html = f"""
+        <html><body>
+        Cieść! </br>
+        Aktualna data i czas na serwerze: {now}.
+        </body></html>"""
+    return HttpResponse(html)
+
+def person_list_html(request):
+    # pobieramy wszystkie obiekty Person z bazy poprzez QuerySet
+    persons = Person.objects.all()
+    return render(request,
+                  "folder_aplikacji/person/detail.html",
+                  {'person': persons})
+
+# dodajemy brakujący import
+from django.shortcuts import render
+
+
+def person_detail_html(request, id):
+    # pobieramy konkretny obiekt Person
+    try:
+        person = Person.objects.get(id=id)
+    except Person.DoesNotExist:
+        raise Http404("Obiekt Person o podanym id nie istnieje")
+
+    return render(request,
+                  "folder_aplikacji/person/detail.html",
+                  {'person': person})
