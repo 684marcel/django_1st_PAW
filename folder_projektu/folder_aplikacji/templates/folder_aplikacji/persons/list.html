@@ -12,3 +12,18 @@
         <hr>
     {% endfor %}
 {% endblock %}
+
+{% extends "folder_aplikacji\base.html" %}
+
+{% block title %}Lista obiektów Osoby{% endblock %}
+
+{% block content %}
+    Aktualnie w mojej bazie dodane są poniższe obiekty Osoba:
+    {% for osoba in osoby %}
+        <p>Gracz: {{ osoba.name }}</p>
+        <p>Drużyna: {{ osoba.team }}</p>
+        <p>Miesiąc dodania: {{ person.month_added }}</p>
+        <p>Kraj: {{ osoba.country.name }}</p>
+        <hr>
+    {% endfor %}
+{% endblock %}
