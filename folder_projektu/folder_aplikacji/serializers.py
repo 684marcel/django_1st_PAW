@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Person, Team, MONTHS, SHIRT_SIZES, Osoba
-
+from .models import Person, Team, MONTHS, SHIRT_SIZES, Osoba, Stanowisko
+from datetime import date
 
 class PersonSerializer(serializers.Serializer):
 
@@ -11,6 +11,12 @@ class PersonSerializer(serializers.Serializer):
     name = serializers.CharField(required=True)
 
     pseudonim = serializers.CharField(max_length = 100)
+    def validate_name(self, value):
+        if not value.istitle():
+            raise serializers.ValidationError(
+                "Nazwa osoby powinna rozpoczynać się wielką literą!",
+            )
+        return value
 
     # pole mapowane z klasy modelu, z podaniem wartości domyślnych
     # zwróć uwagę na zapisywaną wartość do bazy dla default={wybór}[0] oraz default={wybór}[0][0]
@@ -40,13 +46,17 @@ class PersonSerializer(serializers.Serializer):
     
 
 
-    class OsobaSerializer(serializers.Serializer):
+class OsobaSerializer(serializers.Serializer):
+    class Meta:
+        model = Osoba
+        fields = ['id', 'imie', 'nazwisko','plec', 'stanowisko', 'data_dodania']
+        read_only_fields = ['id', 'data_dodania']
 
     # pole tylko do odczytu, tutaj dla id działa też autoincrement
     id = serializers.IntegerField(read_only=True)
 
     # pole wymagane
-    name = serializers.CharField(required=True, max_lengh = 40)
+    name = serializers.CharField(required=True, max_length = 40)
 
     nazwisko = serializers.CharField(max_length = 160)
 
@@ -75,3 +85,38 @@ class PersonSerializer(serializers.Serializer):
         instance.team = validated_data.get('team', instance.team)
         instance.save()
         return instance
+    
+    def validate_imie(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Pole 'imie' musi zawierać tylko litery!!!")
+        return value
+    
+    def validate_nazwisko(self, value):
+        if not value.isalpha():
+            raise serializers.ValidationError("Pole 'nazwisko' musi zawierać tylko litery!!!")
+        return value
+    
+    def validate_data_dodania(self, value):
+        if value > date.today():
+            raise serializers.ValidationError("Pole 'data_dodania' nie może być z przyszłości!!!")
+        return value
+    
+class StanowiskoSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    name = serializers.CharField(max_length = 80)
+    opis = serializers.CharField()
+    
+    def create(self, validated_data):
+        return Stanowisko.objects.create(**validated_data)
+    
+    def update(self, instance, validated_data):
+        instance.nazwa = validated_data.get('nazwa', instance.nazwa)
+        instance.opis = validated_data.get('opis', instance.opis)
+        instance.save()
+        return instance
+    
+class TeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = ['id', 'name', 'country']
+        read_only_fields = ['id']
