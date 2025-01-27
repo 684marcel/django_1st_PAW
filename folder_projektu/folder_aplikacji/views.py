@@ -3,10 +3,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from .permissions import CustomDjangoModelPermissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Osoba, Person, Stanowisko, Team
+from .permissions import CustomDjangoModelPermissions
 from .serializers import OsobaSerializer, PersonSerializer, StanowiskoSerializer, TeamSerializer
 from django.http import HttpResponse, Http404
 import datetime
@@ -19,7 +19,7 @@ class LogoutView(APIView):
 
     def post(self, request):
         logout(request)  # Usuwa sesję użytkownika
-        return Response({"wiad.": "wylogowano pomyślnie!"})
+        return Response({"message": "Wylogowano pomyślnie!"})
 
 # określamy dostępne metody żądania dla tego endpointu
 @api_view(['GET'])
@@ -184,7 +184,7 @@ def person_detail_html(request, id):
     try:
         person = Person.objects.get(id=id)
     except Person.DoesNotExist:
-        raise Http404("obiekt person o podanym id nie istnieje")
+        raise Http404("Obiekt Person o podanym id nie istnieje")
 
     return render(request,
                   "folder_aplikacji/person/detail.html",
