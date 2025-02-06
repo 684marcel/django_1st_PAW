@@ -1,3 +1,3 @@
 Tytuł projektu: Aplikacja zaliczeniowa </br>
 Autorzy: 
-* Marcel Michalczyk
+* Marcel Michalczyk 76566
