@@ -160,7 +160,7 @@ def stanowisko_detail(request, pk):
     elif request.method == 'DELETE':
         stanowisko.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+        
 def welcome_view(request):
     now = datetime.datetime.now()
     html = f"""

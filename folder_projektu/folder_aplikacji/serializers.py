@@ -3,6 +3,7 @@ from .models import Person, Team, MONTHS, SHIRT_SIZES, Stanowisko, Osoba
 from datetime import date
 
 
+
 class PersonSerializer(serializers.Serializer):
 
     # pole tylko do odczytu, tutaj dla id działa też autoincrement
